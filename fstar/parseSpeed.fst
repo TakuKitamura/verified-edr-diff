@@ -38,7 +38,23 @@ Stack fstar_uint16 (requires fun h0 ->
     (I32.eq fstar_uint16.error.code 1l))
   )
 let parseSpeed_body can_id can_dlc data  =
-    // TODO: you need to implement this function here
+    push_frame ();
+    let first_speed_byte_u8: U8.t = data.(0ul) in
+    let second_speed_byte_u8: U8.t = data.(1ul) in
+    let first_speed_byte_u16: U16.t = uint8_to_uint16 first_speed_byte_u8 in
+    let second_speed_byte_u16: U16.t = uint8_to_uint16 second_speed_byte_u8 in
+    let ret: U16.t = U16.(
+        ((second_speed_byte_u16 -^ 0xd0us) *^ 0xffus) +^ 
+        first_speed_byte_u16
+    ) in
+    pop_frame ();
+    {
+        value = ret;
+        error = {
+            code = 0l;
+            message = !$"";
+        };
+    } 
 
 val parseSpeed: 
   can_id: U32.t ->
@@ -67,5 +83,12 @@ let parseSpeed can_id can_dlc data  =
     (U8.eq v4 0uy))) then
         parseSpeed_body can_id can_dlc data 
     else
-        // TODO: you need to return an error value here if the preconditions are not met
+        {
+            value = 0us;
+            error = {
+            code = 1l;
+                message = !$"invalid arguments";
+            };
+        }
+
 

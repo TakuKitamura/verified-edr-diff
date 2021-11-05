@@ -39,7 +39,28 @@ Stack fstar_uint8 (requires fun h0 ->
     (I32.eq fstar_uint8.error.code 1l))
   )
 let parseIndicator_body can_id can_dlc data  =
-    // TODO: you need to implement this function here
+    let indicatorState: U8.t = data.(0ul) in
+    let ret: U8.t = indicatorState in
+    if (U8.eq indicatorState ret) then
+        (
+            {
+                value = ret;
+                error = {
+                    code = 0l;
+                    message = !$"";
+                };
+            }
+        )
+    else
+        (
+            {
+                value = 1uy;
+                error = {
+                    code = 1l;
+                    message = !$"";
+                };
+            }
+        )
 
 val parseIndicator: 
   can_id: U32.t ->
@@ -69,5 +90,11 @@ let parseIndicator can_id can_dlc data  =
     (U8.eq v4 0uy))) then
         parseIndicator_body can_id can_dlc data 
     else
-        // TODO: you need to return an error value here if the preconditions are not met
+        {
+            value = 0uy;
+            error = {
+                code = 1l;
+                message = !$"invalid arguments";
+            };
+        }
 

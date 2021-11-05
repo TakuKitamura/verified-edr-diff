@@ -41,7 +41,28 @@ Stack fstar_uint8 (requires fun h0 ->
     (I32.eq fstar_uint8.error.code 1l))
   )
 let parseDoor_body can_id can_dlc data  =
-    // TODO: you need to implement this function here
+    let door_state: U8.t = data.(2ul) in
+    let ret: U8.t = door_state in
+    if (U8.eq door_state ret) then
+        (
+            {
+                value = ret;
+                error = {
+                    code = 0l;
+                    message = !$"";
+                };
+            }
+        )
+    else
+        (
+            {
+                value = 1uy;
+                error = {
+                    code = 1l;
+                    message = !$"invalid door state";
+                };
+            }
+        )
 
 val parseDoor: 
   can_id: U32.t ->
@@ -75,5 +96,11 @@ let parseDoor can_id can_dlc data  =
     (U8.eq v6 0uy))) then
         parseDoor_body can_id can_dlc data 
     else
-        // TODO: you need to return an error value here if the preconditions are not met
+        {
+            value = 0uy;
+            error = {
+                code = 1l;
+                message = !$"invalid arguments";
+            };
+        }
 
