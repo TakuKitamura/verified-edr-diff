@@ -76,8 +76,6 @@ pub extern "C" fn recordInEDR(
         }
 
         let speed_delta: f64 = now_speed - before_speed;
-
-        // TODO: 衝突と判定する速度変化を決める
         if speed_delta.abs() >= 1.0 && event_data[last_item_index].crashed == false {
             println!("crashed!!!!!");
             event_data[last_item_index].crashed = true;
