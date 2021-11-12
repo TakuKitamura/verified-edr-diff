@@ -79,7 +79,6 @@ val parseDoor:
     (I32.eq fstar_uint8.error.code 1l))
   )
 let parseDoor can_id can_dlc data  = 
-    // meet the preconditions
     if (let v1 = data.(0ul) in
     let v2 = data.(1ul) in
     let v3 = data.(2ul) in
@@ -103,4 +102,3 @@ let parseDoor can_id can_dlc data  =
                 message = !$"invalid arguments";
             };
         }
-
