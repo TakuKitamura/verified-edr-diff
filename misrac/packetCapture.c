@@ -10,7 +10,7 @@
 #include <sys/time.h>
 #include <stdint.h>
 #include "packetCapture.h"
-
+#include <assert.h>
 int getSocket(void)
 {
     int s = socket(PF_CAN, SOCK_RAW, CAN_RAW);
@@ -24,22 +24,16 @@ int getSocket(void)
     addr.can_family = AF_CAN;
     addr.can_ifindex = ifr.ifr_ifindex;
 
-    if (bind(s, (struct sockaddr *)&addr, sizeof(addr)) == -1)
-    {
-        perror("Error in socket bind");
-    }
+    int bind_status = bind(s, (struct sockaddr *)&addr, sizeof(addr));
+    assert(bind_status != -1); // check bind error
     return s;
 }
 
 can_packet packetCapture(int fd)
 {
     can_packet frame;
-    // CANパケットキャプチャ
-    ssize_t n = read(fd, &frame, sizeof(can_packet));
-    if (n == -1)
-    {
-        perror("Error in read");
-    }
+    // CAN packet capture
+    read(fd, &frame, sizeof(can_packet));
     struct timeval tv;
     gettimeofday(&tv, NULL);
     frame.timestamp = (tv.tv_sec * 1000000) + tv.tv_usec;
